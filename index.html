@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sojourner Truth - Voice of Justice</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5ede0;
+    --parchment: #e8d9c0;
+    --ink: #1a1208;
+    --sepia: #3d2b1a;
+    --rust: #8b3a1d;
+    --gold: #b8872a;
+    --gold-light: #d4a844;
+    --warm-white: #faf5ee;
+    --muted: #7a6a55;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #1a1208 0%, #3d2b1a 50%, #5c3a20 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 40px,
+      rgba(184,135,42,0.04) 40px, rgba(184,135,42,0.04) 41px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 40px,
+      rgba(184,135,42,0.04) 40px, rgba(184,135,42,0.04) 41px
+    );
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 900;
+    color: var(--warm-white);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.5s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+    display: block;
+  }
+
+  .hero-divider {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 2.5rem auto;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--parchment);
+    max-width: 560px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1s;
+  }
+
+  .hero-dates {
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gold);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.5s;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--sepia);
+    border-bottom: 1px solid rgba(184,135,42,0.3);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .nav button {
+    background: none;
+    border: none;
+    padding: 1rem 1.6rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .nav button::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%; right: 50%;
+    height: 2px;
+    background: var(--gold);
+    transition: left 0.25s, right 0.25s;
+  }
+
+  .nav button:hover, .nav button.active { color: var(--gold-light); }
+  .nav button.active::after, .nav button:hover::after { left: 10%; right: 10%; }
+
+  .section { display: none; animation: sectionIn 0.5s ease; }
+  .section.visible { display: block; }
+
+  @keyframes sectionIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 5rem 2rem; }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: var(--sepia);
+    line-height: 1.1;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading em { font-style: italic; color: var(--rust); }
+
+  .lead {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-style: italic;
+    line-height: 1.8;
+    color: var(--sepia);
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--gold);
+  }
+
+  p { font-size: 1rem; line-height: 1.85; color: #3a2e22; margin-bottom: 1.25rem; }
+
+  /* ── PHOTO PLACEHOLDER ── */
+  .photo-block {
+    float: right;
+    margin: 0 0 1.5rem 2rem;
+    width: 220px;
+  }
+
+  .photo-placeholder {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: var(--parchment);
+    border: 2px dashed var(--gold);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .photo-placeholder:hover {
+    background: #e0cfb0;
+    border-color: var(--rust);
+  }
+
+  .photo-placeholder svg {
+    width: 36px;
+    height: 36px;
+    opacity: 0.5;
+  }
+
+  .photo-placeholder span {
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+  }
+
+  /* when an actual img is placed inside .photo-placeholder by the user */
+  .photo-placeholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .photo-caption {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 0.4rem;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* smaller variant for speech section */
+  .photo-block-sm {
+    float: right;
+    margin: 0 0 1.5rem 2rem;
+    width: 170px;
+  }
+
+  .photo-block-sm .photo-placeholder {
+    aspect-ratio: 3 / 4;
+  }
+
+  .clearfix::after { content: ''; display: table; clear: both; }
+
+  /* About grid */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2.5rem; }
+
+  .fact-card {
+    background: var(--sepia);
+    color: var(--cream);
+    padding: 1.75rem;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fact-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--gold);
+  }
+
+  .fact-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 0.6rem;
+  }
+
+  .fact-card p { color: var(--parchment); font-size: 0.9rem; margin-bottom: 0; }
+
+  .quote-block {
+    background: var(--parchment);
+    border: 1px solid rgba(184,135,42,0.3);
+    padding: 2.5rem 2rem;
+    margin: 3rem 0;
+    text-align: center;
+    position: relative;
+  }
+
+  .quote-block::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem;
+    color: var(--gold);
+    opacity: 0.2;
+    position: absolute;
+    top: -1rem; left: 1rem;
+    line-height: 1;
+  }
+
+  .quote-block blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--sepia);
+    position: relative;
+    z-index: 1;
+  }
+
+  .quote-block cite {
+    display: block;
+    margin-top: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-style: normal;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Activism */
+  .activism-list { list-style: none; margin: 2rem 0; }
+
+  .activism-list li {
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--parchment);
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .activism-list li:last-child { border-bottom: none; }
+
+  .act-num {
+    width: 32px;
+    height: 32px;
+    background: var(--sepia);
+    color: var(--gold-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .act-content h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--sepia);
+    margin-bottom: 0.3rem;
+  }
+
+  .act-content p { margin-bottom: 0; font-size: 0.92rem; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+
+  .highlight-box { background: var(--rust); color: var(--warm-white); padding: 1.75rem; border-radius: 2px; }
+
+  .highlight-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: var(--gold-light);
+  }
+
+  .highlight-box p { color: rgba(250,245,238,0.85); font-size: 0.9rem; margin: 0; line-height: 1.9; }
+
+  /* Speeches */
+  .speech-card { border: 1px solid var(--parchment); margin-bottom: 2.5rem; overflow: hidden; }
+
+  .speech-header {
+    background: var(--sepia);
+    padding: 1.4rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .speech-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--cream);
+  }
+
+  .speech-year { font-size: 0.68rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; }
+
+  .speech-body { padding: 2rem; background: var(--warm-white); }
+  .speech-body p { font-size: 0.95rem; }
+
+  .speech-pillars { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.5rem; }
+
+  .pillar { background: var(--parchment); padding: 1.25rem; border-top: 3px solid var(--gold); }
+
+  .pillar h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--sepia);
+    margin-bottom: 0.4rem;
+  }
+
+  .pillar p { font-size: 0.83rem; margin: 0; }
+
+  .pullquote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--rust);
+    border-left: 4px solid var(--rust);
+    padding: 0.75rem 1.5rem;
+    margin: 1.5rem 0;
+    line-height: 1.5;
+  }
+
+  /* Timeline */
+  .timeline { position: relative; padding: 2rem 0; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 80px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--gold), var(--rust), var(--gold));
+  }
+
+  .tl-item { display: flex; gap: 2rem; margin-bottom: 2.5rem; position: relative; align-items: flex-start; }
+
+  .tl-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--rust);
+    width: 60px;
+    text-align: right;
+    padding-top: 0.1rem;
+    flex-shrink: 0;
+  }
+
+  .tl-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--cream);
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 0 3px rgba(184,135,42,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .tl-item:hover .tl-dot { transform: scale(1.4); box-shadow: 0 0 0 5px rgba(184,135,42,0.3); }
+
+  .tl-content {
+    flex: 1;
+    padding: 1.25rem 1.5rem;
+    background: var(--warm-white);
+    border: 1px solid var(--parchment);
+    border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+
+  .tl-item:hover .tl-content { border-color: var(--gold); }
+
+  .tl-content h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--sepia);
+    margin-bottom: 0.4rem;
+  }
+
+  .tl-content p { font-size: 0.88rem; margin: 0; color: #4a3d2e; }
+
+  .tl-star .tl-dot { background: var(--rust); width: 18px; height: 18px; }
+  .tl-star .tl-content { border-color: var(--rust); background: #fdf8f4; }
+
+  /* Impact */
+  .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 3rem 0; }
+
+  .impact-tile {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background: var(--sepia);
+    color: var(--cream);
+    transition: transform 0.25s;
+  }
+
+  .impact-tile:hover { transform: translateY(-4px); }
+
+  .impact-tile .big-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .impact-tile p { color: var(--parchment); font-size: 0.85rem; margin: 0; }
+
+  .reformers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
+
+  .reformer-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--warm-white);
+    border: 1px solid var(--parchment);
+    align-items: flex-start;
+  }
+
+  .reformer-initial {
+    width: 44px;
+    height: 44px;
+    background: var(--rust);
+    color: var(--warm-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .reformer-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--sepia);
+    margin-bottom: 0.25rem;
+  }
+
+  .reformer-card p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+
+  footer {
+    background: var(--ink);
+    color: var(--parchment);
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+
+  footer strong { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  @media (max-width: 680px) {
+    .about-grid, .two-col, .speech-pillars, .reformers { grid-template-columns: 1fr; }
+    .impact-grid { grid-template-columns: repeat(2, 1fr); }
+    .timeline::before { left: 60px; }
+    .tl-year { width: 44px; font-size: 0.85rem; }
+    .photo-block, .photo-block-sm { float: none; width: 180px; margin: 0 auto 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="hero-eyebrow">19th Century Reform Movement</p>
+  <h1 class="hero-title">Sojourner<em>Truth</em></h1>
+  <div class="hero-divider"></div>
+  <p class="hero-subtitle">"Truth is powerful and it prevails." She was one of the strongest voices for freedom and women's rights in American history.</p>
+  <p class="hero-dates">c. 1797 to 1883</p>
+  <div class="scroll-cue">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="active" onclick="showSection('about', this)">About</button>
+  <button onclick="showSection('activism', this)">Activism</button>
+  <button onclick="showSection('speeches', this)">Speeches</button>
+  <button onclick="showSection('timeline', this)">Timeline</button>
+  <button onclick="showSection('impact', this)">Impact</button>
+</nav>
+
+<!-- ABOUT -->
+<section class="section visible" id="about">
+  <div class="container">
+    <p class="section-label">Who She Was</p>
+    <h2 class="section-heading">Born into Slavery,<br><em>She Fought for Freedom</em></h2>
+
+    <div class="clearfix">
+      <!-- PHOTO 1: Replace this block with your image -->
+      <div class="photo-block">
+        <div class="photo-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Add photo here<br>(portrait of Sojourner Truth)</span>
+        </div>
+        <p class="photo-caption">Sojourner Truth, c. 1870</p>
+      </div>
+
+      <p class="lead">Sojourner Truth was born Isabella Baumfree around 1797 in Ulster County, New York. She was born into slavery and spent her early life working under slave owners. She would later spend the rest of her life speaking out against injustice.</p>
+
+      <p>Her first language was Dutch, which reflects the Dutch influence in parts of New York at that time. In 1827, a man named Isaac Van Wagenen helped her gain her freedom. Right away, she took legal action to get her son Peter back, who had been sold into slavery in Alabama against the law. She won the case.</p>
+
+      <p>In 1843, she changed her name to <strong>Sojourner Truth</strong>. She believed she was meant to travel and speak the truth about unfair treatment. She became a traveling preacher and speaker who fought to end slavery and to give women equal rights.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="fact-card">
+        <h3>Born Into Slavery</h3>
+        <p>Born Isabella Baumfree around 1797 in Ulster County, New York. Dutch was her first language because of the Dutch history in that part of New York.</p>
+      </div>
+      <div class="fact-card">
+        <h3>Freedom in 1827</h3>
+        <p>Gained her freedom with help from Isaac Van Wagenen. She then won a court case to bring back her son Peter, who had been sold into slavery without legal right.</p>
+      </div>
+      <div class="fact-card">
+        <h3>A New Name, A New Purpose</h3>
+        <p>In 1843, she renamed herself Sojourner Truth and began traveling and speaking. She believed her job was to travel and share the truth about injustice.</p>
+      </div>
+      <div class="fact-card">
+        <h3>A Life of Speaking Out</h3>
+        <p>She gave speeches for decades beside people like Frederick Douglass and William Lloyd Garrison. She was unique because she had lived through slavery herself.</p>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <blockquote>"I am not going to die, I'm going home like a shooting star."</blockquote>
+      <cite>Sojourner Truth</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVISM -->
+<section class="section" id="activism">
+  <div class="container">
+    <p class="section-label">Her Work</p>
+    <h2 class="section-heading">Fighting for <em>Two Causes at Once</em></h2>
+
+    <p class="lead">Sojourner Truth fought against slavery and for women's rights at the same time. Most people kept these as two separate fights. She knew they were connected.</p>
+
+    <p>She worked alongside leaders like Frederick Douglass and William Lloyd Garrison. But Truth brought something no one else could. She had actually lived through slavery, so when she spoke, people listened.</p>
+
+    <ul class="activism-list">
+      <li>
+        <div class="act-num">1</div>
+        <div class="act-content">
+          <h4>Fighting Against Slavery</h4>
+          <p>She traveled all over the country giving speeches against slavery. She told her own story, including the hard labor and the pain of being separated from family.</p>
+        </div>
+      </li>
+      <li>
+        <div class="act-num">2</div>
+        <div class="act-content">
+          <h4>Fighting for Women's Rights</h4>
+          <p>She went to major women's rights meetings and pushed back on the idea that only white, wealthy women deserved equal rights. She said equality had to include all women.</p>
+        </div>
+      </li>
+      <li>
+        <div class="act-num">3</div>
+        <div class="act-content">
+          <h4>Helping During the Civil War</h4>
+          <p>She helped sign up Black soldiers for the Union Army, worked as a nurse and teacher in camps for people who had escaped slavery, and helped groups caring for formerly enslaved people.</p>
+        </div>
+      </li>
+      <li>
+        <div class="act-num">4</div>
+        <div class="act-content">
+          <h4>Meeting President Lincoln in 1864</h4>
+          <p>In 1864, she was invited to the White House and met President Abraham Lincoln. This was a very powerful moment for a woman who had been born into slavery.</p>
+        </div>
+      </li>
+      <li>
+        <div class="act-num">5</div>
+        <div class="act-content">
+          <h4>Helping Formerly Enslaved People After the War</h4>
+          <p>After the Civil War, she pushed the government to help formerly enslaved people move to the western United States so they could build independent lives.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="two-col">
+      <div class="highlight-box">
+        <h3>Issues She Stood Up For</h3>
+        <p>Equal pay for women<br>Legal and financial rights for women<br>Political representation<br>The struggles faced by Black women<br>Independence for formerly enslaved people</p>
+      </div>
+      <div class="highlight-box" style="background: var(--sepia);">
+        <h3>People She Worked With</h3>
+        <p>Frederick Douglass, anti-slavery leader<br>William Lloyd Garrison, anti-slavery activist<br>Elizabeth Cady Stanton, women's rights organizer<br>Susan B. Anthony, women's rights leader</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEECHES -->
+<section class="section" id="speeches">
+  <div class="container">
+    <p class="section-label">Her Words</p>
+    <h2 class="section-heading">Speeches That <em>Changed Minds</em></h2>
+
+    <p class="lead">Sojourner Truth could not read or write, yet she became one of the most powerful speakers of the 1800s. Her words came from real life, and that made them impossible to ignore.</p>
+
+    <div class="speech-card">
+      <div class="speech-header">
+        <h3>"Ain't I a Woman?"</h3>
+        <span class="speech-year">Ohio Women's Rights Convention, 1851</span>
+      </div>
+      <div class="speech-body clearfix">
+
+        <!-- PHOTO 2: Replace this block with your image -->
+        <div class="photo-block-sm">
+          <div class="photo-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span>Add photo here</span>
+          </div>
+          <p class="photo-caption">Sojourner Truth, 1864</p>
+        </div>
+
+        <p>At the 1851 Women's Rights Convention in Akron, Ohio, some men argued that women were too weak to deserve equal rights. Truth stood up and took apart that idea in just a few minutes.</p>
+
+        <p>This convention came after earlier events like the Seneca Falls Convention and the Declaration of Sentiments, which had already started pushing for women's rights. Truth added her powerful voice to make the movement even stronger.</p>
+
+        <div class="pullquote">"Where did your Christ come from? From God and a woman. Man had nothing to do with him."</div>
+
+        <p>She talked about plowing fields and planting crops her whole life, working just as hard as any man. She spoke about giving birth to 13 children and watching most of them be sold into slavery. Her point was simple. People said women needed to be protected, but no one had ever protected her.</p>
+
+        <div class="speech-pillars">
+          <div class="pillar">
+            <h4>Physical Strength</h4>
+            <p>She plowed fields and planted crops equal to any man, showing that women were not weak.</p>
+          </div>
+          <div class="pillar">
+            <h4>Motherhood and Pain</h4>
+            <p>She gave birth to 13 children and saw most of them sold into slavery, a pain that no one could dismiss.</p>
+          </div>
+          <div class="pillar">
+            <h4>Pushing Back on Religion</h4>
+            <p>She asked how religion could be used against women when Jesus himself came into the world through a woman.</p>
+          </div>
+          <div class="pillar">
+            <h4>The Power of Women</h4>
+            <p>She said if Eve alone could "turn the world upside down," women working together could help set it right.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="speech-card">
+      <div class="speech-header">
+        <h3>Speech on the 14th Amendment</h3>
+        <span class="speech-year">1867</span>
+      </div>
+      <div class="speech-body">
+        <p>After the Civil War, the government was working on giving rights to Black men through the 14th Amendment. Truth had an important question. What about Black women?</p>
+
+        <div class="pullquote">Truth warned that if only men got rights, those men might become "masters over the women," creating a new version of the same unfair system.</div>
+
+        <p>She argued that financial freedom was just as important as legal rights. Women worked as hard as men but were paid much less. She called for women to have their own independence, saying they needed "their own money in their pockets." This speech was way ahead of its time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section" id="timeline">
+  <div class="container">
+    <p class="section-label">Her Life</p>
+    <h2 class="section-heading">A Life <em>Full of Purpose</em></h2>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-year">1797</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Born Isabella Baumfree</h4>
+          <p>Born into slavery in Ulster County, New York. Dutch was her first language because of the Dutch history in that part of New York.</p>
+        </div>
+      </div>
+
+      <div class="tl-item tl-star">
+        <div class="tl-year">1827</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Gains Her Freedom</h4>
+          <p>Escapes slavery and gains freedom with help from Isaac Van Wagenen. She then wins a court case to bring back her son Peter, who had been sold into slavery in Alabama against the law.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">1843</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Becomes Sojourner Truth</h4>
+          <p>Changes her name and begins traveling and preaching. She believed she was meant to travel and speak the truth about injustice and inequality.</p>
+        </div>
+      </div>
+
+      <div class="tl-item tl-star">
+        <div class="tl-year">1851</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>"Ain't I a Woman?" Speech</h4>
+          <p>Gives her most famous speech at the Women's Rights Convention in Akron, Ohio. She challenges the idea that women are weak and that Black women do not count in the fight for equal rights.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">1853</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>William Lloyd Garrison Stands Up for Women's Rights</h4>
+          <p>Garrison supports women's rights at a convention even though many people thought his views went too far. He stands beside Truth and other women in the movement.</p>
+        </div>
+      </div>
+
+      <div class="tl-item tl-star">
+        <div class="tl-year">1864</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Meets President Abraham Lincoln</h4>
+          <p>She is invited to the White House during the Civil War and meets President Lincoln. A historic moment for a woman who had been born into slavery.</p>
+        </div>
+      </div>
+
+      <div class="tl-item tl-star">
+        <div class="tl-year">1867</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Speech on the 14th Amendment</h4>
+          <p>She argues that Black women must not be left out of the new rights being given after the Civil War. She warns that leaving women out would just create a new kind of unfair system.</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-year">1883</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Passes Away in Battle Creek, Michigan</h4>
+          <p>She dies at around age 86 in Battle Creek, Michigan, after decades of fighting for justice. Her impact continued to grow long after her death.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section class="section" id="impact">
+  <div class="container">
+    <p class="section-label">Her Legacy</p>
+    <h2 class="section-heading">An Impact That <em>Still Matters Today</em></h2>
+
+    <p class="lead">Sojourner Truth did not just take part in the reform movements of the 1800s. She helped shape them. She made it clear that true equality had to include everyone.</p>
+
+    <div class="impact-grid">
+      <div class="impact-tile">
+        <span class="big-num">86</span>
+        <p>Years of life spent fighting for justice and equality</p>
+      </div>
+      <div class="impact-tile">
+        <span class="big-num">40+</span>
+        <p>Years of traveling and speaking out across the country</p>
+      </div>
+      <div class="impact-tile">
+        <span class="big-num">2</span>
+        <p>Major movements she helped push forward, abolition and women's rights</p>
+      </div>
+    </div>
+
+    <p>One of her biggest lasting contributions is the idea now called <strong>intersectionality</strong>. This means that the fight against racism and the fight for women's rights are linked together and have to be dealt with together. Truth was living and arguing this long before anyone had a name for it.</p>
+
+    <p>Her speeches made the anti-slavery movement more personal. Her work in women's rights pushed the movement to think about race too. She showed that speaking from personal experience is one of the most powerful things a person can do.</p>
+
+    <div class="quote-block">
+      <blockquote>"If women want any rights more than they's got, why don't they just take them, and not be talking about it."</blockquote>
+      <cite>Sojourner Truth</cite>
+    </div>
+
+    <h3 style="font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--sepia); margin: 3rem 0 1rem;">Other Leaders of the Women's Rights Movement</h3>
+    <p>Truth worked alongside many important people who helped shape reform movements in the 1800s.</p>
+
+    <div class="reformers">
+      <div class="reformer-card">
+        <div class="reformer-initial">LS</div>
+        <div>
+          <h4>Lucy Stone</h4>
+          <p>A strong speaker well known for holding an audience and talking about women's rights with great skill.</p>
+        </div>
+      </div>
+      <div class="reformer-card">
+        <div class="reformer-initial">EC</div>
+        <div>
+          <h4>Elizabeth Cady Stanton</h4>
+          <p>A writer who created speeches, petitions, and articles that helped shape the women's rights movement.</p>
+        </div>
+      </div>
+      <div class="reformer-card">
+        <div class="reformer-initial">SA</div>
+        <div>
+          <h4>Susan B. Anthony</h4>
+          <p>An organizer who helped keep the women's rights movement going and growing over many years.</p>
+        </div>
+      </div>
+      <div class="reformer-card">
+        <div class="reformer-initial">WG</div>
+        <div>
+          <h4>William Lloyd Garrison</h4>
+          <p>An anti-slavery activist who also supported women's rights, even when many people thought his views went too far.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Sojourner Truth</strong><br>
+  c. 1797 to 1883 · Anti-Slavery Activist · Women's Rights Fighter · American Hero<br><br>
+  <span style="color:var(--muted); font-size:0.7rem;">Educational Project · 19th Century Reform Movements</span>
+</footer>
+
+<script>
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('visible');
+    btn.classList.add('active');
+    window.scrollTo({ top: document.querySelector('.nav').offsetTop, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
